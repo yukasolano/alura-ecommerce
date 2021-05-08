@@ -1,3 +1,6 @@
+# alura-ecommerce
+Alura - Curso Kafka
+
 Precisa inicializar o zookeeper
 
 bin/zookeeper-server-start.sh config/zookeeper.properties 
