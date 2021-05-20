@@ -12,19 +12,10 @@ public class Order {
     private final String email;
 
     public Order(String orderId,
-                 BigDecimal value,
-                 String email) {
+                 BigDecimal value, String email) {
         this.orderId = orderId;
         this.value = value;
         this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public BigDecimal getValue() {
-        return value;
     }
 
     @Override

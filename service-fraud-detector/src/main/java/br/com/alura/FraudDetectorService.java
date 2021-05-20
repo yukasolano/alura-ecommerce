@@ -2,7 +2,9 @@ package br.com.alura;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class FraudDetectorService {
 
@@ -14,8 +16,9 @@ public class FraudDetectorService {
         }
     }
 
+    private KafkaDispacher<Order> kafkaDispacher = new KafkaDispacher<>();
 
-    private void parse(ConsumerRecord<String, Order> record) {
+    private void parse(ConsumerRecord<String, Order> record) throws ExecutionException, InterruptedException {
         System.out.println("-------------------------");
         System.out.println("Processing new order, checking for fraud");
         System.out.println(record.key());
@@ -27,6 +30,14 @@ public class FraudDetectorService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Order processed");
+
+        Order order = record.value();
+        if (order.getValue().compareTo(new BigDecimal("4000")) >= 0) {
+            System.out.println("Order is a fraud " + order);
+            kafkaDispacher.send("ECOMMERCE_ORDER_FRAUD", order.getEmail(), order);
+        } else {
+            System.out.println("Order approved " + order);
+            kafkaDispacher.send("ECOMMERCE_ORDER_APPROVED", order.getEmail(), order);
+        }
     }
 }

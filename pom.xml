@@ -26,6 +26,8 @@
         <module>service-fraud-detector</module>
         <module>service-new-order</module>
         <module>service-log</module>
+        <module>service-create-user</module>
+        <module>service-http-ecommerce</module>
     </modules>
 
     <dependencies>

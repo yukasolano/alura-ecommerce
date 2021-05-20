@@ -21,7 +21,8 @@ public class KafkaService<T> implements Closeable {
     public KafkaService(String groupId,
                         String topic,
                         ConsumerFunction<T> parse,
-                        Class<T> type, Map<String, String> properties) {
+                        Class<T> type,
+                        Map<String, String> properties) {
 
         this.consumer = new KafkaConsumer<>(getProperties(type, groupId, properties));
         this.parse = parse;
@@ -31,7 +32,8 @@ public class KafkaService<T> implements Closeable {
     public KafkaService(String groupId,
                         Pattern topic,
                         ConsumerFunction<T> parse,
-                        Class<T> type, Map<String, String> properties) {
+                        Class<T> type,
+                        Map<String, String> properties) {
         this.consumer = new KafkaConsumer<>(getProperties(type, groupId, properties));
         this.parse = parse;
         consumer.subscribe(topic);
@@ -44,14 +46,19 @@ public class KafkaService<T> implements Closeable {
                 System.out.println("Encontrei " + records.count() + " registros");
 
                 for (ConsumerRecord<String, T> record : records) {
-                    parse.consume(record);
+                    try {
+                        parse.consume(record);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
     private Properties getProperties(Class<T> type,
-                                     String groupId, Map<String, String> overrideProperties) {
+                                     String groupId,
+                                     Map<String, String> overrideProperties) {
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());

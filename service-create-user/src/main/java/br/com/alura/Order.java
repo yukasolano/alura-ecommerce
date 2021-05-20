@@ -1,5 +1,6 @@
 package br.com.alura;
 
+
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -19,12 +20,12 @@ public class Order {
         this.email = email;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public BigDecimal getValue() {
         return value;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
