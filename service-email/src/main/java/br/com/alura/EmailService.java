@@ -3,17 +3,19 @@ package br.com.alura;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class EmailService {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         EmailService emailService = new EmailService();
-        try (KafkaService<Email> service = new KafkaService<>(EmailService.class.getSimpleName(), "ECOMMERCE_SEND_EMAIL", emailService::parse, Email.class, new HashMap<>())) {
+        try (KafkaService<Email> service = new KafkaService<>(EmailService.class.getSimpleName(),
+                "ECOMMERCE_SEND_EMAIL", emailService::parse, new HashMap<>())) {
             service.run();
         }
     }
 
-    private void parse(ConsumerRecord<String, Email> record) {
+    private void parse(ConsumerRecord<String, Message<Email>> record) {
         System.out.println("-------------------------");
         System.out.println("Sending email");
         System.out.println(record.key());

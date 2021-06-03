@@ -33,10 +33,12 @@ public class NewOrderServlet extends HttpServlet {
             Order order = new Order(orderId, value, email);
 
             //mesmas compras do mesmo usuario sao processadas sequenciamente
-            orderDispacher.send("ECOMMERCE_NEW_ORDER", email, order);
+            orderDispacher.send("ECOMMERCE_NEW_ORDER", email,
+                    new CorrelationId(NewOrderServlet.class.getSimpleName()), order);
 
             Email emailCode = new Email("New order", "Thank you for your order! We are processing your order!");
-            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email, emailCode);
+            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email,
+                    new CorrelationId(NewOrderServlet.class.getSimpleName()), emailCode);
 
             System.out.println("New order sent successfully.");
 

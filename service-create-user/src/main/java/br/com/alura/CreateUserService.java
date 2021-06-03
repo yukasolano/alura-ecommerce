@@ -9,15 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class CreateUserService {
 
     private final Connection connection;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
         CreateUserService createUserService = new CreateUserService();
         try (KafkaService<Order> service = new KafkaService<>(CreateUserService.class.getSimpleName(),
-                "ECOMMERCE_NEW_ORDER", createUserService::parse, Order.class, new HashMap<>())) {
+                "ECOMMERCE_NEW_ORDER", createUserService::parse, new HashMap<>())) {
             service.run();
         }
     }
@@ -36,12 +37,12 @@ public class CreateUserService {
 
     private KafkaDispacher<Order> kafkaDispacher = new KafkaDispacher<>();
 
-    private void parse(ConsumerRecord<String, Order> record) throws SQLException {
+    private void parse(ConsumerRecord<String, Message<Order>> record) throws SQLException {
         System.out.println("-------------------------");
         System.out.println("Processing new order, checking for new user");
         System.out.println(record.value());
 
-        Order order = record.value();
+        Order order = record.value().getPayload();
         if (isNewUser(order.getEmail())) {
             inserNewUser(order.getEmail());
         }
