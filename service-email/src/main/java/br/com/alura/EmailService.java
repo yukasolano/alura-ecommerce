@@ -1,5 +1,6 @@
 package br.com.alura;
 
+import br.com.alura.consumer.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.HashMap;

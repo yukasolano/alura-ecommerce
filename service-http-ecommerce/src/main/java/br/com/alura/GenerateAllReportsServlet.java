@@ -1,5 +1,7 @@
 package br.com.alura;
 
+import br.com.alura.dispacher.KafkaDispacher;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

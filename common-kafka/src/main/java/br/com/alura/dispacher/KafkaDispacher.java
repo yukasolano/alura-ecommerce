@@ -1,5 +1,7 @@
-package br.com.alura;
+package br.com.alura.dispacher;
 
+import br.com.alura.CorrelationId;
+import br.com.alura.Message;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -32,7 +34,7 @@ public class KafkaDispacher<T> implements Closeable {
                                              String key,
                                              CorrelationId id,
                                              T payload) {
-        Message<T> value = new Message<>(id, payload);
+        Message<T> value = new Message<>(id.continueWith("_" + topic), payload);
         ProducerRecord<String, Message<T>> record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) -> {
             if (ex != null) {

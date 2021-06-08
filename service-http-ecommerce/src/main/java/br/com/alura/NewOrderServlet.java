@@ -1,5 +1,7 @@
 package br.com.alura;
 
+import br.com.alura.dispacher.KafkaDispacher;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +13,11 @@ import java.util.UUID;
 public class NewOrderServlet extends HttpServlet {
 
     private final KafkaDispacher<Order> orderDispacher = new KafkaDispacher<>();
-    private final KafkaDispacher<Email> emailDispacher = new KafkaDispacher<>();
 
     @Override
     public void destroy() {
         super.destroy();
         orderDispacher.close();
-        emailDispacher.close();
     }
 
     @Override
@@ -35,10 +35,6 @@ public class NewOrderServlet extends HttpServlet {
             //mesmas compras do mesmo usuario sao processadas sequenciamente
             orderDispacher.send("ECOMMERCE_NEW_ORDER", email,
                     new CorrelationId(NewOrderServlet.class.getSimpleName()), order);
-
-            Email emailCode = new Email("New order", "Thank you for your order! We are processing your order!");
-            emailDispacher.send("ECOMMERCE_SEND_EMAIL", email,
-                    new CorrelationId(NewOrderServlet.class.getSimpleName()), emailCode);
 
             System.out.println("New order sent successfully.");
 

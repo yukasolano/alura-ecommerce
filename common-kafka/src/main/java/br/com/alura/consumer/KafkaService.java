@@ -1,5 +1,8 @@
-package br.com.alura;
+package br.com.alura.consumer;
 
+import br.com.alura.Message;
+import br.com.alura.dispacher.GsonSerializer;
+import br.com.alura.dispacher.KafkaDispacher;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
