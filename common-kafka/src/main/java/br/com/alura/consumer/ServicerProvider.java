@@ -1,5 +1,6 @@
 package br.com.alura.consumer;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -12,7 +13,7 @@ public class ServicerProvider<T> implements Callable<Void> {
         this.factory = factory;
     }
 
-    public Void call() throws ExecutionException, InterruptedException {
+    public Void call() throws ExecutionException, InterruptedException, SQLException {
 
         ConsumerService<T> myService = factory.create();
 
